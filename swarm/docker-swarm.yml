@@ -1,0 +1,30 @@
+version: '3.5'
+
+volumes:
+  db-data:
+
+services:
+
+  app:
+    image: yamilurbina/votacion:v1
+    ports:
+      - 80:3000
+    command: php -S 0.0.0.0:3000 -t /app
+    deploy:
+      replicas: 8
+      resources:
+        reservations:
+          cpus: '0.20'
+          memory: 50M
+        limits:
+          cpus: '0.25'
+          memory: 60M
+
+  redis:
+    image: redis:3.0-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - db-data:/data
+    deploy:
+      replicas: 1
+
